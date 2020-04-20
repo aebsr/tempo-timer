@@ -1,0 +1,232 @@
+<html lang="en">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-34982219-4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-34982219-4');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Tempo Timer - Strength Conditioning Tool</title>
+    <meta name="title" content="Tempo Timer - Strength Conditioning Tool">
+    <meta name="description" content="Stay accountable and master the mechanics of your favorite excercise, through deliberate tempo'd reps.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://tempo.antoinebutler.com/">
+    <meta property="og:title" content="Tempo Timer - Strength Conditioning Tool">
+    <meta property="og:description" content="Stay accountable and master the mechanics of your favorite excercise, through deliberate tempo'd reps.">
+    <meta property="og:image" content="http://tempo.antoinebutler.com/app.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="http://tempo.antoinebutler.com/">
+    <meta property="twitter:title" content="Tempo Timer - Strength Conditioning Tool">
+    <meta property="twitter:description" content="Stay accountable and master the mechanics of your favorite excercise, through deliberate tempo'd reps.">
+    <meta property="twitter:image" content="http://tempo.antoinebutler.com/app.jpg">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js"></script>
+</head>
+<body>
+    <a href="#sidebar" class="skip-nav fixed-corner fas fa-bars"></a>
+
+    <form>
+        <h1>Tempo Timer</h1>
+        <div class="counter">
+            <input class="enabled active" type="numer" required pattern="^(?:[0-9]|0[1-9]|1[0-9]|20)$" maxlength="2" value="5" />
+            <input class="enabled" type="numer" required pattern="^(?:[0-9]|0[1-9]|1[0-9]|20)$" maxlength="2" value="3" />
+            <input class="enabled" type="numer" required pattern="^(?:[0-9]|0[1-9]|1[0-9]|20)$" maxlength="2" value="4" />
+            <input class="enabled" type="numer" required pattern="^(?:[0-9]|0[1-9]|1[0-9]|20)$" maxlength="2" value="1" />
+        </div>
+        
+        <button id="s" type="submit"><i class="fas fa-play"></i><i class="fas fa-stop"></i></button>
+ 
+        <div class="progress">
+            <div class="reps"></div>
+            <div class="running-clock">00:00.0</div>
+        </div>
+
+        <a class="donate fixed-corner fas fa-donate" target="antoineTimer" href="http://paypal.me/aebsr"></a>
+    </form>
+
+    <aside id="sidebar" class="sidebar">
+        <h4>Controls</h4>
+        <p>Clik and enter 1 through 20 seconds per partition. "0" disables a partition. Please play, and work!</p>
+        <h4>About</h4>
+        <p>A handy tempo timer for your workout of choice. Squat, Press, Push, Pull, along to any tempo scheme you can concoct.</p>
+        <p>Inspired by every ahtletes' inability to accurately count seconds, reps, or weight on the barbell.</p>
+        <h4>Credits</h4>
+        <p>Voice by <a target="antoineTimer" href="https://freesound.org/people/EnjoyPA/sounds/203066/">EnjoyPA</a>, image by <a target="antoineTimer" href="https://www.pexels.com/photo/landscape-photography-of-mountains-covered-in-snow-691668/">Eberhard Grossgasteiger</a>.</p>
+        <p><a target="antoineTimer" href="http://antoinebutler.com">Antoine Butler</a> &copy; 2020</p>
+    </aside>
+
+
+    <script>
+        const sound = new Howl({
+            src: ['sound.wav'],
+            sprite: {
+                1: [0, 900],
+                2: [1000, 900],
+                3: [2000, 900],
+                4: [3000, 900],
+                5: [4000, 900],
+                6: [5000, 900],
+                7: [6000, 900],
+                8: [7000, 900],
+                9: [8000, 900],
+                10: [9000, 900],
+                11: [10000, 900],
+                12: [11000, 900],
+                13: [12000, 900],
+                14: [13000, 900],
+                15: [14000, 900],
+                16: [15000, 900],
+                17: [16000, 900],
+                18: [17000, 900],
+                19: [18000, 900],
+                20: [19000, 900],
+            }
+        });
+
+        const button = document.getElementById("s");
+        const repsContainer = document.getElementsByClassName('reps')[0];
+        const clock = document.getElementsByClassName('running-clock')[0];
+        const menu = document.getElementsByClassName('skip-nav')[0];
+        const body = document.getElementsByTagName('BODY')[0];
+        const form = document.querySelector('form');
+        let
+            reps = 1,
+            numbers = [];
+
+        getActiveParts = () => {
+            partitions = document.querySelectorAll(".counter .enabled");
+            if(partitions.length) {
+                partitions[0].classList.add('active')
+            }
+        }
+
+        getActiveParts();
+
+        form.addEventListener("keyup", (e) => {
+            let active = form.querySelector(".active");
+            if(active) { active.classList.remove('active'); }
+            if (e.target.value == 0) {
+                e.target.classList.remove('enabled');
+            } else {
+                e.target.classList.add('enabled');
+            }
+            getActiveParts();
+        });
+
+        menu.addEventListener("click", () => {
+            body.classList.toggle('has-info')
+        });
+
+        addZero = (i) => {
+            if (i < 10) {
+                i = "0" + i;
+            }
+            return i;
+        }
+
+        rep = () => {
+            repsContainer.textContent = `${reps++} Reps!`;
+            repsContainer.classList.add('count');
+            setTimeout(function(){ repsContainer.classList.remove('count'); }, 1000);
+        }
+
+        stopTimer = () => {
+            console.log('Stopped');
+            clearInterval(counting);
+            clearInterval(runningClock);
+            clock.textContent = "00:00.0";
+
+            partitions.forEach((part, i) => {
+                part.removeAttribute("readonly");
+                part.classList.remove('active');
+                part.value = numbers[i];
+            });
+            partitions[0].classList.add('active');
+        }
+
+        startTimer = () => {
+            numbers = [];
+            partitions.forEach((part) => {
+                numbers.push(parseInt(part.value))
+                part.setAttribute("readonly", true);
+            });
+
+            console.log('Started');
+                
+            let
+                counter = parseInt(partitions[0].value),
+                part = 0,
+                progress = 0,
+                totalSeconds = numbers.reduce((a, b) => a + b, 0),
+                ms = 0,
+                seconds = 0,
+                minutes = 0;
+
+            counting = setInterval(() => {
+                if (counter >= 1) {
+                    partitions[part].value = counter--;
+                } else {
+                    partitions[part].value = numbers[part]; // resets the previous counter
+                    partitions[part].classList.toggle('active');
+
+                    if(part < partitions.length -1) {
+                        part++; // prepare to move to next part
+                        counter = partitions[part].value;
+                    } else { // back to the start
+                        part = 0; 
+                        counter = partitions[part].value;
+                        rep();
+                    }
+                    
+                    partitions[part].value = counter--;
+                    partitions[part].classList.toggle('active');
+                }
+                sound.play(partitions[part].value); // speak number
+            }, 1000);
+
+            runningClock = setInterval(() => {
+                ms+=1;
+                if(ms>=10) {
+                    ms = 0;
+                    seconds++
+                    if (seconds >= 60) {
+                        seconds = 0;
+                        minutes++;
+                        if (minutes >= 60) {
+                            stopTimer();
+                        }
+                    }
+                }
+                clock.textContent = addZero(minutes) + ":" + addZero(seconds) + "." + ms;
+            }, 100);
+        }
+
+        form.addEventListener("submit", () => {
+            if(form.checkValidity() && partitions.length) {
+                s.toggleAttribute('data-counting');
+                if(s.hasAttribute('data-counting')) {
+                    startTimer();
+                } else {
+                    stopTimer();
+                }
+            } else {
+                alert('Bad number set, try again.');
+            }
+        })        
+    </script>
+</body>
+</html>
