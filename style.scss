@@ -68,7 +68,6 @@ body {
     align-self: center;
     letter-spacing: 1px;
     line-height: 1.5;
-    overflow: hidden;
 
     @include tablet {
         &.has-info {
@@ -261,6 +260,7 @@ button {
         position: fixed;
         left: 50%;
         bottom: 80px;
+        margin-top: 0;
         margin-left: -40px;
     }
 }
