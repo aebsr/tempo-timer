@@ -43,12 +43,12 @@
     <a href="#sidebar" class="skip-nav fixed-corner fas fa-bars"></a>
 
     <form>
-        <h1>Tempo Timer</h1>
+        <h1>Tempo Timer <small>Maximize strength conditioning with variable timing</small></h1>
         <div class="counter">
-            <input class="enabled active" type="numer" required pattern="^(?:[0-9]|0[1-9]|1[0-9]|20)$" maxlength="2" value="5" />
-            <input class="enabled" type="numer" required pattern="^(?:[0-9]|0[1-9]|1[0-9]|20)$" maxlength="2" value="3" />
-            <input class="enabled" type="numer" required pattern="^(?:[0-9]|0[1-9]|1[0-9]|20)$" maxlength="2" value="4" />
-            <input class="enabled" type="numer" required pattern="^(?:[0-9]|0[1-9]|1[0-9]|20)$" maxlength="2" value="1" />
+            <input class="enabled active" type="numer" required pattern="^(?:[0-9]|0[1-9]|1[0-9]|20)$" maxlength="2" value="3" onfocus="this.select()"/>
+            <input class="enabled" type="numer" required pattern="^(?:[0-9]|0[1-9]|1[0-9]|20)$" maxlength="2" value="3" onfocus="this.select()"/>
+            <input class="enabled" type="numer" required pattern="^(?:[0-9]|0[1-9]|1[0-9]|20)$" maxlength="2" value="3" onfocus="this.select()"/>
+            <input class="enabled" type="numer" required pattern="^(?:[0-9]|0[1-9]|1[0-9]|20)$" maxlength="2" value="1" onfocus="this.select()"/>
         </div>
         
         <button id="s" type="submit"><i class="fas fa-play"></i><i class="fas fa-stop"></i></button>
@@ -63,7 +63,7 @@
 
     <aside id="sidebar" class="sidebar">
         <h4>Controls</h4>
-        <p>Clik and enter 1 through 20 seconds per partition. "0" disables a partition. Please play, and work!</p>
+        <p>Click and enter 1 through 20 seconds per partition. "0" disables a partition. Please play, and work!</p>
         <h4>About</h4>
         <p>A handy tempo timer for your workout of choice. Squat, Press, Push, Pull, along to any tempo scheme you can concoct.</p>
         <p>Inspired by every ahtletes' inability to accurately count seconds, reps, or weight on the barbell.</p>
@@ -120,14 +120,16 @@
         getActiveParts();
 
         form.addEventListener("keyup", (e) => {
-            let active = form.querySelector(".active");
-            if(active) { active.classList.remove('active'); }
-            if (e.target.value == 0) {
-                e.target.classList.remove('enabled');
-            } else {
-                e.target.classList.add('enabled');
+            if(!s.hasAttribute('data-counting')) {
+                let active = form.querySelector(".active");
+                if(active) { active.classList.remove('active'); }
+                if (e.target.value == 0) {
+                    e.target.classList.remove('enabled');
+                } else {
+                    e.target.classList.add('enabled');
+                }
+                getActiveParts();
             }
-            getActiveParts();
         });
 
         menu.addEventListener("click", () => {
@@ -142,7 +144,7 @@
         }
 
         rep = () => {
-            repsContainer.textContent = `${reps++} Reps!`;
+            repsContainer.textContent = `Reps: ${reps++}`;
             repsContainer.classList.add('count');
             setTimeout(function(){ repsContainer.classList.remove('count'); }, 1000);
         }
@@ -152,6 +154,8 @@
             clearInterval(counting);
             clearInterval(runningClock);
             clock.textContent = "00:00.0";
+            reps = 1;
+            repsContainer.textContent = '';
 
             partitions.forEach((part, i) => {
                 part.removeAttribute("readonly");

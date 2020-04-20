@@ -42,7 +42,7 @@ $sunset: #fd6051;
     to {
       transform: perspective(400px);
     }
-  }
+}
 
 * {
     box-sizing: border-box;
@@ -81,6 +81,13 @@ h1 {
     font-size: 24px;
     top: 1em;
     left: 1em;
+
+    small {
+        display: block;
+        line-height: 1;
+        font-size: 0.7em;
+        font-weight: 300;
+    }
 }
 
 h2, h3, h4, h5, h6 {
@@ -162,6 +169,7 @@ blockquote {
         appearance: textfield;
         border: none;
         background-color: rgba(220, 20, 60, 0.9);
+        padding: 0;
 
         &[readonly] {
             cursor: default;
@@ -188,10 +196,14 @@ blockquote {
     }
  
     .active {
-        background-color: rgba(0,0,0,0.75);
-        color: rgba(255, 255, 255, 0.9);
         transform: scale(1.8);
         margin: 0 .25em;
+
+        &:valid,
+        &:read-only {
+            background-color: rgba(0,0,0,0.75);
+            color: rgba(255, 255, 255, 0.9);
+        }
     }
     
 }
@@ -234,6 +246,11 @@ button {
     }
 }
 
+::selection {
+    color: inherit;
+    background-color: white;
+}
+
 form {
     transform: opacity 0.2s ease-in-out;
     display: grid;
@@ -274,15 +291,22 @@ form {
     bottom: 1em;
     right: 1em;
     display: grid;
-    grid-auto-flow: column;
     align-items: center;
-    grid-gap: 1em;
+    grid-gap: 0.5em;
 
     .reps {
         font-size: 0.75em;
+        text-align: right;
     }
 
     @include tablet {
+        grid-auto-flow: column;
+        grid-gap: 1em;
+
+        .reps {
+            text-align: inherit;
+        }
+
         .has-info & {
             transform: translateX(-240px);
         }
