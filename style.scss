@@ -11,6 +11,12 @@ $sunset: #fd6051;
     }    
 }
 
+@mixin stacked {
+    @media (orientation: landscape ) and (max-width: 48em) {
+        @content;
+    }
+}
+
 @keyframes pulse {
     from,
     50%,
@@ -58,10 +64,11 @@ body {
     margin: 0;
     grid-auto-flow: column;
     grid-template-columns: auto 0;
-    min-height: 100vh;
+    height: 100%;
     align-self: center;
     letter-spacing: 1px;
     line-height: 1.5;
+    overflow: hidden;
 
     @include tablet {
         &.has-info {
@@ -87,6 +94,11 @@ h1 {
         line-height: 1;
         font-size: 0.7em;
         font-weight: 300;
+        width: 80%;
+    }
+
+    @include tablet {
+        width: 100%;
     }
 }
 
@@ -244,6 +256,13 @@ button {
         margin-top: 1em;
         margin-bottom: 1em;
     }
+
+    @include stacked {
+        position: fixed;
+        left: 50%;
+        bottom: 80px;
+        margin-left: -40px;
+    }
 }
 
 ::selection {
@@ -266,9 +285,9 @@ form {
     box-shadow: inset 0 -2px 4px #555;
     padding: 24px;
     opacity: 0;
-    min-height: 100vh;
-    max-height: 100vh;
+    height: 100%;
     position: fixed;
+    overflow: scroll;
 
     .has-info & {
         animation-name: flip;
@@ -280,7 +299,6 @@ form {
     @include tablet {
         position: relative;
         background-color: rgba(255, 255, 255, 0.8);
-        overflow: scroll;
     }
 }
 
