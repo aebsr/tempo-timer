@@ -129,6 +129,12 @@ a {
     right: 1em;
     transform: translateX(0);
     z-index: 3;
+    color: $sunset;
+    animation-name: pulse;
+    animation-duration: 2s;
+    animation-fill-mode: both;
+    font-size: 30px;
+    text-shadow: 2px 1px #999;
 
     &:hover {
         transform: scale(1.2);
@@ -173,6 +179,7 @@ blockquote {
         color: rgba(255, 255, 255, 0.5);
         border-radius: 0.125em;
         width: 2ch;
+        height: 2ch;
         outline: none;
         line-height: 1;
         overflow: hidden;
@@ -181,6 +188,11 @@ blockquote {
         border: none;
         background-color: rgba(220, 20, 60, 0.9);
         padding: 0;
+        border-bottom: .05em solid transparent;
+
+        &::selection {
+            background-color: rgba(0,0,0,0.5);
+        }
 
         &[readonly] {
             cursor: default;
@@ -204,6 +216,10 @@ blockquote {
         &:read-only {
             background-color: rgba(0,0,0,0.5);
         }
+
+        &:focus:not(:read-only) {
+            border-color: $sunset;
+        }
     }
  
     .active {
@@ -225,17 +241,15 @@ button {
     font-size: 30px;
     margin: 0 auto;
     display: block;
-    background: none;
     appearance: none;
     padding: 0.5em;
-    border: white;
     outline: none;
-    color: #ccc;
-    background-color: white;
-    box-shadow: 0 0px  3px 11px rgba(255, 255, 255, 0.25);
+    color: white;
+    background: $sunset;
+    border: 6px solid white;
     border-radius: 50%;
-    width: 80px;
-    height: 80px;
+    width: 92px;
+    height: 92px;
     cursor: pointer;
 
     .fa-stop {
@@ -261,7 +275,7 @@ button {
         left: 50%;
         bottom: 80px;
         margin-top: 0;
-        margin-left: -40px;
+        margin-left: -46px;
     }
 }
 
